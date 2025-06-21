@@ -22,26 +22,31 @@ function Chat() {
     fetchInitialMessage();
   }, []);
 
-  const sendMessage = async () => {
-    if (!message.trim()) return;
+const sendMessage = async () => {
+  if (!message.trim()) return;
 
-    setChatHistory((prev) => [...prev, { sender: "user", text: message }]);
+  // Push user message once
+  setChatHistory((prev) => [...prev, { sender: "user", text: message }]);
 
-    const res = await fetch("http://localhost:5000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
+  // ✅ Clear message immediately after sending
+  setMessage("");
 
-    const data = await res.json();
-    setChatHistory((prev) => [
-      ...prev,
-      { sender: "user", text: message },
-      { sender: "bot", text: data.reply },
-    ]);
-    setPhase(data.phase);
-    setMessage("");
-  };
+  const res = await fetch("http://localhost:5000/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+
+  const data = await res.json();
+
+  // Append bot's reply
+  setChatHistory((prev) => [
+    ...prev,
+    { sender: "bot", text: data.reply }
+  ]);
+
+  setPhase(data.phase);
+};
 
 
   return (
@@ -60,12 +65,22 @@ function Chat() {
       </div>
 
       <div className="chat-input-area">
-        <input
+        <textarea
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
           placeholder="Type your message..."
           className="chat-input"
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          rows={1}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault(); // prevent newline
+              sendMessage();
+            }
+          }}
         />
         <button onClick={sendMessage} className="chat-send-button">
           Send

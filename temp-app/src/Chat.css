@@ -8,6 +8,7 @@
 .chat-title {
   text-align: center;
   margin-bottom: 1rem;
+  color: #f1f0f0;
 }
 
 .chat-box {
@@ -51,7 +52,13 @@
   border: 1px solid #ccc;
   border-radius: 20px;
   margin-right: 0.5rem;
+  resize: none;
+  overflow: hidden;
+  min-height: 40px;
+  max-height: 200px;
+  line-height: 1.5;
 }
+
 
 .chat-send-button {
   padding: 0.6rem 1.2rem;
@@ -72,4 +79,44 @@
 
 .chat-message {
   white-space: pre-line;
+}
+
+/* Page wrapper with black background */
+.chat-wrapper {
+  background-color: #000;
+  min-height: 100vh;
+  padding: 2rem;
+  color: white;
+  position: relative;
+}
+
+/* Move your existing chat into center with max-width */
+.chat-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+/* Keep the white chat box for contrast */
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  height: 400px;
+  overflow-y: auto;
+  background-color: #fff;
+  color: black;
+}
+
+/* Top-right image */
+.chat-image-top-right {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: auto;
+  z-index: 10;
 }
